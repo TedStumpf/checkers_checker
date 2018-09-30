@@ -31,7 +31,7 @@ class LinearAnalyzer:
         for sec in range(len(self.data)):
             for i in range(len(self.data[sec])):
                 if (rand() < mutate_chance):
-                    self.data[sec][i] = min(1, max(0, self.data[sec][i] + mutate_scale * rand() * choice(-1, 1)))
+                    self.data[sec][i] = min(1, max(0, self.data[sec][i] + mutate_scale * rand() * choice((-1, 1))))
 
     #   merge():      Merges this LinearAnalyzer with another one, returns the new LinearAnalyzer
     #   other_par:    The other LinearAnalyzer to merge with
@@ -78,7 +78,7 @@ class LinearAnalyzer:
         return self.get_raw_data(0, 3)
 
     #   get_square_value(): Returns the weighted value of a given square on the board
-    #   row, column: The cordinates of the square on the board
-    def get_square_value(self, row, column):
-        index = column // 2 + 4 * row
+    #   row, col: The cordinates of the square on the board
+    def get_square_value(self, row, col):
+        index = col // 2 + 4 * row
         return self.get_raw_data(1, index)
