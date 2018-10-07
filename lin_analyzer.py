@@ -77,6 +77,21 @@ class LinearAnalyzer:
     def get_enemy_king(self):
         return self.get_raw_data(0, 3)
 
+    #   get_piece(): Returns the weighted value for a given piece
+    #   friendly: Is the piece friendly
+    #   king: Is the piece a king
+    def get_piece(self, friendly, king):
+        if friendly:
+            if king:
+                return self.get_friendly_king()
+            else:
+                return self.get_friendly_man()
+        else:
+            if king:
+                return self.get_enemy_king()
+            else:
+                return self.get_enemy_man()
+
     #   get_square_value(): Returns the weighted value of a given square on the board
     #   row, col: The cordinates of the square on the board
     def get_square_value(self, row, col):
