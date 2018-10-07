@@ -207,7 +207,7 @@ class GameBoard():
     #   get_moves_minmax(): Returns a (move list, score) pair
     #   depth: How many iterations to do
     #   lin_anl: What Linear Analyzer to use
-    def get_move_minmax(self, depth, lin_anl = None, base_player = None):
+    def get_move_minmax(self, depth, lin_anl = None, base_player = None, alpha = -_WINNING_SCORE, beta = _WINNING_SCORE):
         #   Revert to defaults
         if (lin_anl == None):
             lin_anl = self.base_analyzer
@@ -242,6 +242,12 @@ class GameBoard():
             new_board.make_moves(move_list)
             score = new_board.get_move_minmax(depth - 1, lin_anl, base_player)[1]
             paired_list.append((move_list, score))
+            if (base_player == self.player):
+                alpha = max(alpha, score)
+            else:
+                beta = min(beta, score)
+            if (alpha >= beta):
+                break
 
         paired_list.sort(key = lambda x: x[1], reverse = base_player == self.player)
         best_list = [pair for pair in paired_list if pair[1] == paired_list[0][1]]
@@ -345,10 +351,14 @@ class GameBoard():
             score = 0
             for row in range(8):
                 for col in range(8):
+                    square = lin_anl.get_square_value(row, col)
+                    if (player == _PLAYER_RED):
+                         square = lin_anl.get_square_value(7 - row, 7 - col)
+
                     if (self.is_owned(row, col, player)):
-                        score += lin_anl.get_piece(True, self.is_king(row, col)) * lin_anl.get_square_value(row, col)
+                        score += lin_anl.get_piece(True, self.is_king(row, col)) * square
                     elif (self.is_not_owned(row, col, player)):
-                        score -= lin_anl.get_piece(False, self.is_king(row, col)) * lin_anl.get_square_value(row, col)
+                        score -= lin_anl.get_piece(False, self.is_king(row, col)) * square
             return score
 
     #   console_print(): Print the console to current state of the board
@@ -365,13 +375,13 @@ class GameBoard():
 def test():
     board = GameBoard()
     print("#" * 30)
-    while (board.get_winner() == _PLAYER_NONE):
+    while ((board.get_winner() == _PLAYER_NONE) and (board.idle_timer < 50)):
         board.console_print()
         all_moves = board.get_vaild_moves()
         print("Moves:")
         print(all_moves)
         print("Minmax")
-        minmax = board.get_move_minmax(5)
+        minmax = board.get_move_minmax(4)
         print(minmax[0], round(minmax[1] * 100) / 100)
         move = minmax[0]
         #board.make_move(move[0], move[1], move[2], move[3], move[4])
