@@ -53,12 +53,15 @@ class TrainingScreen(Screen):
         t = Label(text = "Percentage of New Contestants")
         s = Slider(min=0, max=30, value=10, step = 1, value_track=True, value_track_color=[0, 0.8, 0.8, 1])
         self.sliders.append((t, s))
+        t = Label(text = "Games to Play")
+        s = Slider(min=1, max=30, value=5, step = 1, value_track=True, value_track_color=[0, 0.8, 0.8, 1])
+        self.sliders.append((t, s))
 
         for t, s in self.sliders:
             t.base_text = t.text
             s.label = t
             t.text = t.base_text + ": " + str(int(s.value))
-            if 'erc' in t.base_text:
+            if 'Percentage' in t.base_text:
                 t.text += "%"
             s.bind(value = self.slider_move)
 
@@ -68,7 +71,7 @@ class TrainingScreen(Screen):
     #   Slider
     def slider_move(self, instance, value):
         instance.label.text = instance.label.base_text + ": " + str(int(value))
-        if 'erc' in instance.label.base_text:
+        if 'Percentage' in instance.label.base_text:
             instance.label.text += "%"
 
 
