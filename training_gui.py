@@ -7,6 +7,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 import random
+from overseer import Overseer
 
 class TrainingScreen(Screen):
     def __init__(self, parent_app, **kwargs):
@@ -80,4 +81,13 @@ class TrainingScreen(Screen):
         print('The button <%s> is being pressed' % instance.text)
         if (instance.id == 'btn_back'):
             self.parent_app.screenmanager.current = 'screen_main'
-            
+        elif (instance.id == 'btn_start'):
+            self.start_training()
+
+    def start_training(self):
+        overseer = Overseer(self.sliders[0][1].value, self.sliders[1][1].value, self.sliders[2][1].value, self.sliders[3][1].value, self.sliders[4][1].value, self.sliders[5][1].value)
+        overseer.create_starting_population()
+        overseer.set_up_tournament()
+        print("Starting Tournament")
+        while (not overseer.is_tournament_completed()):
+            overseer.do_tournament_step()
