@@ -361,6 +361,15 @@ class GameBoard():
                         score -= lin_anl.get_piece(False, self.is_king(row, col)) * square
             return score
 
+    #   Play a game
+    def play_game(self, lin_anl1, lin_anl2, search_depth = 3, idle_timeout = 50):
+        #   Wait until we have a winner or we time out
+        while ((self.get_winner() == _PLAYER_NONE) and (self.idle_timer < idle_timeout)):
+            minmax = self.get_move_minmax(search_depth, [-1, lin_anl1, lin_anl2][self.player])
+            move = minmax[0]
+            self.make_moves(move)
+        return self.get_winner()
+
     #   console_print(): Print the console to current state of the board
     def console_print(self):
         print("Current Player: " + ("None", "Red", "Black")[self.player])
